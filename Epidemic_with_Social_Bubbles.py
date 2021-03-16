@@ -22,7 +22,7 @@ chance_recovery = 98.2 #Recovery rate
 preimmune = 0
 preinfected = 1
 
-probmove = 2
+probmove = 2            #Percentage probability of individual moving from one bubble to another
 list_percinf = [5]     #Says at what % infected to increase bubble size
 numbubs_list = [10]    #Says what to change bubble size to
 Runs = 1              #Number of trials
@@ -59,7 +59,7 @@ def createpop ():           #sorts population into bubbles
       pop.append(guy)           #adds guy to the population
     else: n = bubsize
      
-def bub ():
+def bub (): #Creates a list of bubbles
       bubbles.clear()
       bubnum = 0
       p = 0
@@ -71,7 +71,7 @@ def bub ():
       return bubbles
       
          
-def search (i, num):
+def search (i, num):  #Search function
         if i == num:
             return True
             
@@ -175,22 +175,22 @@ def move():          #moves guy from bubble to bubble
   #print (bubbles)
   #print(pop)
   for guy in pop:       
-    t = uniform(1, 100) 
+    t = uniform(1, 100) #Generates random number, if that number is above the percent probability of moving the individual moves
     #print("t=", t)
     if t<=probmove:  
         #print(guy[2])
         #print("yes")
-        bubbles.remove(guy[2])
-        while len(rangenum) < numbubs:
+        bubbles.remove(guy[2])   #Removes current bubble, so that guy cannot move back into his own bubble
+        while len(rangenum) < numbubs:  #Creates numbers in a list that will serve as the endpoints of intervals
             s = s + e
             rangenum.append(s)
-        w = uniform(1,100)
+        w = uniform(1,100)     #Another random number is generated
         c = 0
         a = 0
         b = 1
         end1 = rangenum[a] 
         end2 = rangenum[b] 
-        while c < q :
+        while c < q :                 #Depending on which interval the value of w landed in, the individual is moved into a new bubble
           if w >= end1 and w < end2:
            guy[2] = bubbles[c]
            c = q
@@ -202,11 +202,11 @@ def move():          #moves guy from bubble to bubble
            end2 = rangenum[b]
     bubbles = bub()
     #print(pop)
- except ZeroDivisionError:
+ except ZeroDivisionError: 
      pass
 
     
-def counting ():
+def counting ():  #Counts the number of guys in each bubble
     number_of_guys = []
     for l in bubbles:
         h = 0
@@ -217,7 +217,7 @@ def counting ():
         #print(number_of_guys)
     return number_of_guys
 
-def avgcounting():
+def avgcounting():  #Finds the average number of guys in each bubble 
     number_of_guys = counting()
     #print("counting = ", number_of_guys)
     Average = sum(number_of_guys) / len(number_of_guys)
@@ -225,7 +225,7 @@ def avgcounting():
     #print ("avgcount = ", avgcount)
     return avgcount
 
-def reorganize():
+def reorganize():    #reorganizes the population so that individuals in the same bubble will have adjacent indexes in the population
     newpop = []
     for i in bubbles:
         for guy in pop:
@@ -234,22 +234,22 @@ def reorganize():
     print ("newpop = ", newpop)
     return (newpop)
 
-def newbub():
+def newbub():     #this sorts individuals into new bubbles
   global v, numbubs
   percinf = percentinfected()
   if v < len(list_percinf):
-   if percinf >= list_percinf[v]:   
+   if percinf >= list_percinf[v]:     #Values in percinf_list are acessed and matched to value of same index in numbubs_list.  
     try:
      while percinf >= list_percinf[v]:  
       newpopbub = reorganize()
       numbubs = numbubs_list[v]
-      bubsize = math.ceil(popsize / numbubs)
+      bubsize = math.ceil(popsize / numbubs)   #Finding bubble size for new population
       bubnum = 0
       b = bubsize
       k = 0
       a = bubsize*k
       b = a + bubsize 
-      for s in range (numbubs):
+      for s in range (numbubs):  #goes through population and assigns individuals to new bubbles in newpop.  
        for o in range (a, b):
          try:  
           guy = newpopbub[o]
@@ -307,7 +307,7 @@ def summarize ():                   #totals the number of people in each state f
     print('day =', T,'immune =', immune0, 'infected =', infected0, 'dead =', dead0, 'naive =', naive0)
     return imm, inf, ded, nai, tim, totinf_list, newinf
 
-def derivativenewinf ():
+def derivativenewinf ():  #Finds how fast the number of new infections each day is rising/falling
     derivativenewinf_list = []
     a = 0
     b = 1
